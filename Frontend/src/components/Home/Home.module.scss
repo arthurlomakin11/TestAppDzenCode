@@ -1,0 +1,29 @@
+﻿.ContentList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ContentListComments {
+    @extend .ContentList;
+    overflow: hidden;
+    margin: 20px 0 0 -20px;
+    padding-left: 20px;
+}
+
+.ContentListItem {
+    @extend .ContentList;
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px 0 14px;
+}
+
+.ContentListNestedComments {
+    @extend .ContentList;
+    padding: 0 0 0 20px;
+}
+
+.ContentListItemComment {
+    @extend .ContentListItem;
+    padding: 0;
+}
