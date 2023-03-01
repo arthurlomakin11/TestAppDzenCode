@@ -1,8 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using TestAppDzenCode.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);;
+
+var connectionString = builder.Configuration.GetConnectionString("DzenCodeConnectionString");
+builder.Services.AddDbContext<CommentsDbContext>(x => x.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
