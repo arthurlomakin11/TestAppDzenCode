@@ -6,5 +6,6 @@
     ParentId: number | null,
     Parent: Comment | null,
     Files: File[],
-    DateAdded: Date
+    DateAdded: string
+    Comments: IComment[]
 }

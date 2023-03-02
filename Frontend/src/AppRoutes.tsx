@@ -1,4 +1,3 @@
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home/Home";
 
 const AppRoutes = [
@@ -7,8 +6,8 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/fetch-data',
-    element: <FetchData />
+    path: '/page/:pageNumber',
+    element: <Home />
   }
 ];
 

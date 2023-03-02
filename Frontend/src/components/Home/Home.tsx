@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import HomeStyles from "./Home.module.scss";
-import {Comment} from "./Comment";
-import {CommentsHeader} from "./CommentsHeader";
+import {Comment} from "../Comment/Comment";
 import {IComment} from "../../interfaces/IComment";
+import {Pagination, PaginationItem, PaginationLink} from "reactstrap";
+import {useParams} from "react-router-dom";
 
 export let Home = () =>  {
     const [state, setState] = useState({
@@ -18,29 +18,66 @@ export let Home = () =>  {
         })()
     }, [])
 
+    const params = useParams();
+    console.log(params);
+
     return state.loading
         ? <p><em>Loading...</em></p>
-        : <div>
-            <div className={HomeStyles.CommentsSection}>
-                <CommentsHeader/>
-
-                <ul className={HomeStyles.ContentListComments}>
+        : <>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Дата создания</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {
                         state.comments.map(comment => {
-                            return <li className={HomeStyles.ContentListItem} key={comment.Id}>
-                                <Comment comment={comment}>
-                                    <ul className={HomeStyles.ContentListNestedComments}>
-                                        <li className={HomeStyles.ContentListItem}>
-                                            <Comment comment={comment}>
-                                                <></>
-                                            </Comment>
-                                        </li>
-                                    </ul>
-                                </Comment>
-                            </li>
+                            return <tr key={comment.Id}>
+                                <td>{comment.UserName}</td>
+                                <td>{comment.Email}</td>
+                                <td>{comment.DateAdded}</td>
+                                <td><Comment comment={comment} showReplyButton={false}/></td>
+                            </tr>
                         })
                     }
-                </ul>
-            </div>
-        </div>;
+                </tbody>
+            </table>
+            <Pagination>
+                <PaginationItem>
+                    <PaginationLink previous href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink href="#">
+                        1
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink href="#">
+                        2
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink href="#">
+                        3
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink href="#">
+                        4
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink href="#">
+                        5
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationLink next href="#" />
+                </PaginationItem>
+            </Pagination>
+        </>;
 }
