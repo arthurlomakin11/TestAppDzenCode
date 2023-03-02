@@ -3,6 +3,7 @@ import {Comment} from "../Comment/Comment";
 import {IComment} from "../../interfaces/IComment";
 import {Pagination, PaginationItem, PaginationLink} from "reactstrap";
 import {useParams} from "react-router-dom";
+import axios from "axios";
 
 export let Home = () =>  {
     const [state, setState] = useState({
@@ -10,19 +11,42 @@ export let Home = () =>  {
         loading: true
     })
     
+    const [pagesNumber, setPagesNumber] = useState(1);
+    
     useEffect(() => {
         (async () => {
-            const response = await fetch("api/comments");
-            const data:IComment[] = await response.json();
-            setState({comments: data, loading: false});
+            const pagesNumberResponse = await axios.get("api/comments/GetCommentsPagesNumber");
+            const pagesNumberData = await pagesNumberResponse.data;
+            
+            setPagesNumber(pagesNumberData);
         })()
     }, [])
+    
+    useEffect(() => {
+        (async () => {
+            const data = await axios.get<IComment[]>("api/comments", {
+                params: {
+                    skip: (currentPage - 1) * 25
+                }
+            });
+
+            setState({
+                comments: data.data,
+                loading: false
+            });
+        })()
+    }, [pagesNumber])
 
     const params = useParams();
-    console.log(params);
+
+    const currentPage = parseInt(!!params.pageNumber ? params.pageNumber : "1");
+    const previousPage = currentPage > 1 ? currentPage - 1 : currentPage;
+    const nextPage = currentPage < pagesNumber ? currentPage + 1 : currentPage;
+    const pages = [...Array(pagesNumber).keys()].map(i => i + 1);
+    //Add pages to show array
 
     return state.loading
-        ? <p><em>Loading...</em></p>
+        ? <p><em>Загрузка...</em></p>
         : <>
             <table className="table table-striped">
                 <thead>
@@ -47,36 +71,20 @@ export let Home = () =>  {
                 </tbody>
             </table>
             <Pagination>
-                <PaginationItem>
-                    <PaginationLink previous href="#" />
+                <PaginationItem disabled={currentPage == previousPage}>
+                    <PaginationLink previous href={`./page/${previousPage}`} />
                 </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">
-                        1
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">
-                        2
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">
-                        3
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">
-                        4
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink href="#">
-                        5
-                    </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                    <PaginationLink next href="#" />
+                {
+                    pages.map(page => {
+                        return <PaginationItem active={currentPage == page} key={page}>
+                            <PaginationLink href={`./page/${page}`}>
+                                {page}
+                            </PaginationLink>
+                        </PaginationItem>
+                    })   
+                }
+                <PaginationItem disabled={currentPage == nextPage}>
+                    <PaginationLink next href={`./page/${nextPage}`} />
                 </PaginationItem>
             </Pagination>
         </>;

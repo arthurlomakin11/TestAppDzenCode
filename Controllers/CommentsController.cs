@@ -18,13 +18,26 @@ public class CommentsController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Comment> Get()
+    public IEnumerable<Comment> Get(int skip)
     {
         var result = _commentsDbContext.Comments
             .Include(c => c.Files)
-            .Where(c => c.Parent == null);
+            .Where(c => c.Parent == null)
+            .OrderBy(c => c.DateAdded)
+            .Skip(skip)
+            .Take(10);
 
         return result;
+    }
+    
+    [HttpGet("GetCommentsPagesNumber")]
+    public double GetCommentsPagesNumber()
+    {
+        var result = _commentsDbContext.Comments.Count();
+
+        var pagesCount = Math.Ceiling(result / 25.0);
+        
+        return pagesCount;
     }
     
     [HttpGet("GetCommentsTree")]
