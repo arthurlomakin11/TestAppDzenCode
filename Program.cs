@@ -1,3 +1,5 @@
+using LinqToDB.Data;
+using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TestAppDzenCode.Data;
 
@@ -9,7 +11,10 @@ builder.Services.AddControllersWithViews()
     .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);;
 
 var connectionString = builder.Configuration.GetConnectionString("DzenCodeConnectionString");
-builder.Services.AddDbContext<CommentsDbContext>(x => x.UseNpgsql(connectionString));
+builder.Services.AddDbContext<CommentsDbContext>(o =>o.UseNpgsql(connectionString));
+LinqToDBForEFTools.Initialize();
+DataConnection.TurnTraceSwitchOn();
+DataConnection.WriteTraceLine = (s1, s2, t) => Console.WriteLine(s1, s2, t);
 
 var app = builder.Build();
 

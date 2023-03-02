@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TestAppDzenCode.Data;
 
@@ -16,6 +17,7 @@ public class File
     public string Src { get; set; }
     
     public int CommentId { get; set; }
+    [JsonIgnore]
     public Comment Comment { get; set; }
 
     public FileType FileType { get; set; }

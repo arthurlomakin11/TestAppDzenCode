@@ -27,7 +27,7 @@ export let Home = () =>  {
                 <ul className={HomeStyles.ContentListComments}>
                     {
                         state.comments.map(comment => {
-                            return <li className={HomeStyles.ContentListItem} key={comment.id}>
+                            return <li className={HomeStyles.ContentListItem} key={comment.Id}>
                                 <Comment comment={comment}>
                                     <ul className={HomeStyles.ContentListNestedComments}>
                                         <li className={HomeStyles.ContentListItem}>

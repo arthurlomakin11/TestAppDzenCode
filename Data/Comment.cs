@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TestAppDzenCode.Data;
 
@@ -15,6 +16,7 @@ public class Comment
     public Comment? Parent { get; set; }
     
     public List<File> Files { get; set; }
+    public List<Comment> Comments { get; set; }
     
     public DateTime DateAdded { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿namespace TestAppDzenCode.Data;
+﻿using LinqToDB.EntityFrameworkCore;
+
+namespace TestAppDzenCode.Data;
 
 using Microsoft.EntityFrameworkCore;
 

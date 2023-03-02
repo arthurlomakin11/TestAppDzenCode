@@ -1,10 +1,10 @@
 ﻿export interface IComment {
-    id: number,
-    userName: string,
-    email: string,
-    text: string,
-    parentId: number | null,
-    parent: Comment | null,
-    files: File[],
-    dateAdded: Date
+    Id: number,
+    UserName: string,
+    Email: string,
+    Text: string,
+    ParentId: number | null,
+    Parent: Comment | null,
+    Files: File[],
+    DateAdded: Date
 }

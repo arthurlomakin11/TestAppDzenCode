@@ -11,11 +11,11 @@ interface Props {
 export let Comment : React.FC<Props> = props => {
     return <div className={Styles.Comment}>
         <div className={Styles.CommentHead}>
-            <span className={Styles.CommentUser}>{props.comment.userName}</span>
+            <span className={Styles.CommentUser}>{props.comment.UserName}</span>
 
-            <time className={Styles.CommentDateTime}>{props.comment.dateAdded?.toLocaleString()}</time>
+            <time className={Styles.CommentDateTime}>{props.comment.DateAdded?.toLocaleString()}</time>
 
-            <div className={Styles.CommentMessage}>{props.comment.text}</div>
+            <div className={Styles.CommentMessage}>{props.comment.Text}</div>
 
             <div className={Styles.CommentFooter}>
                 <a href="" className={Styles.CommentFooterLink}>Ответить</a>
