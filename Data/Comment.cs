@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TestAppDzenCode.Data;
 
@@ -12,6 +13,7 @@ public class Comment
     public string Text { get; set; }
     
     public int? ParentId { get; set; }
+    [JsonIgnore]
     public Comment? Parent { get; set; }
     
     public List<File> Files { get; set; }
