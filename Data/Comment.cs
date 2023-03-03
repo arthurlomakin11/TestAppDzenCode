@@ -17,7 +17,7 @@ public class Comment
     public Comment? Parent { get; set; }
     
     public List<File> Files { get; set; }
-    public List<Comment> Comments { get; set; }
+    public IEnumerable<Comment> Comments { get; set; }
     
     public DateTime DateAdded { get; set; }
 }
