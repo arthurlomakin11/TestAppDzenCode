@@ -72,14 +72,4 @@ public class CommentsController : ControllerBase
         
         return pagesCount;
     }
-    
-    [HttpGet("GetCommentsTree")]
-    public IEnumerable<Comment> GetCommentsTree(int Id)
-    {
-        var result = _commentsDbContext.Comments
-            .Include(c => c.Files)
-            .Where(c => c.Parent == null);
-
-        return result;
-    }
 }
