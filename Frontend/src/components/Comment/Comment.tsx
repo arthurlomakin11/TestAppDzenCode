@@ -3,6 +3,7 @@ import Styles from "./Comment.module.scss"
 import {IComment} from "../../interfaces/IComment";
 import HomeStyles from "../Home/Home.module.scss";
 import {Link} from "react-router-dom";
+import {CommentReplyForm} from "../CommentReplyForm/CommentReplyForm";
 
 export let Comment = ({comment, homePageView = false}:{comment:IComment, homePageView?: boolean}) => {
     return <div className={Styles.Comment}>
@@ -18,7 +19,7 @@ export let Comment = ({comment, homePageView = false}:{comment:IComment, homePag
                     <div className={Styles.CommentFooter}>
                         <a href="" className={Styles.CommentFooterLink}>Ответить</a>
                     </div>
-                    <div className={Styles.CommentReplyForm}/>
+                    <CommentReplyForm/>
                 </> : <>
                     <div className={Styles.CommentMessage}>
                         <Link to={`./comment/${comment.Id}`}>
