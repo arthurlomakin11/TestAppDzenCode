@@ -27,3 +27,21 @@
     @extend .ContentListItem;
     padding: 0;
 }
+
+.TableHeader {
+    box-shadow: inset 0px 0px 0px 1px #dbe1e1de !important;
+}
+
+.TableHeaderOrderSelector {
+    cursor: pointer;
+}
+
+.TableHeaderOrderAsc::before {
+    content: "▲";
+    padding-right: 10px;
+}
+
+.TableHeaderOrderDesc::before {
+    content: "▼";
+    padding-right: 10px;
+}
