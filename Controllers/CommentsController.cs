@@ -24,8 +24,8 @@ public class CommentsController : ControllerBase
             .Include(c => c.Files)
             .Where(c => c.Parent == null)
             .OrderBy(c => c.DateAdded)
-            .Skip(skip)
-            .Take(10);
+            .Skip(skip * 25)
+            .Take(25);
 
         return result;
     }

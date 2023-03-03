@@ -3,17 +3,21 @@ import Styles from "./Comment.module.scss"
 import {IComment} from "../../interfaces/IComment";
 import HomeStyles from "../Home/Home.module.scss";
 
-export let Comment = ({comment, showReplyButton = true}:{comment:IComment, showReplyButton?: boolean}) => {
+export let Comment = ({comment, showOnlyText = false}:{comment:IComment, showOnlyText?: boolean}) => {
     return <div className={Styles.Comment}>
         <div className={Styles.CommentHead}>
-            <span className={Styles.CommentUser}>{comment.UserName}</span>
+            {
+                !showOnlyText ? <>
+                    <span className={Styles.CommentUser}>{comment.UserName}</span>
 
-            <time className={Styles.CommentDateTime}>{comment.DateAdded?.toLocaleString()}</time>
+                    <time className={Styles.CommentDateTime}>{comment.DateAdded?.toLocaleString()}</time>
+                </> : <></>
+            }
 
             <div className={Styles.CommentMessage}>{comment.Text}</div>
 
             {
-                showReplyButton ? <>
+                !showOnlyText ? <>
                     <div className={Styles.CommentFooter}>
                         <a href="" className={Styles.CommentFooterLink}>Ответить</a>
                     </div>

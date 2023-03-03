@@ -26,7 +26,7 @@ export let Home = () =>  {
         (async () => {
             const data = await axios.get<IComment[]>("api/comments", {
                 params: {
-                    skip: (currentPage - 1) * 25
+                    skipPage: (currentPage - 1)
                 }
             });
 
@@ -42,8 +42,9 @@ export let Home = () =>  {
     const currentPage = parseInt(!!params.pageNumber ? params.pageNumber : "1");
     const previousPage = currentPage > 1 ? currentPage - 1 : currentPage;
     const nextPage = currentPage < pagesNumber ? currentPage + 1 : currentPage;
-    const pages = [...Array(pagesNumber).keys()].map(i => i + 1);
-    //Add pages to show array
+    const allPages = [...Array(pagesNumber).keys()].map(i => i + 1);
+    const current5PageBlock = Math.ceil(currentPage / 5);
+    const PageChangerArray = allPages.slice((current5PageBlock - 1) * 5, current5PageBlock * 5);
 
     return state.loading
         ? <p><em>Загрузка...</em></p>
@@ -64,7 +65,7 @@ export let Home = () =>  {
                                 <td>{comment.UserName}</td>
                                 <td>{comment.Email}</td>
                                 <td>{comment.DateAdded}</td>
-                                <td><Comment comment={comment} showReplyButton={false}/></td>
+                                <td><Comment comment={comment} showOnlyText={true}/></td>
                             </tr>
                         })
                     }
@@ -75,7 +76,7 @@ export let Home = () =>  {
                     <PaginationLink previous href={`./page/${previousPage}`} />
                 </PaginationItem>
                 {
-                    pages.map(page => {
+                    PageChangerArray.map(page => {
                         return <PaginationItem active={currentPage == page} key={page}>
                             <PaginationLink href={`./page/${page}`}>
                                 {page}
