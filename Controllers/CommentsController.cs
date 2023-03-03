@@ -27,7 +27,7 @@ public class CommentsController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Comment> Get(int skip, int UserName, int Email, int DateAdded)
+    public IEnumerable<Comment> Get(int skipPage, int UserName, int Email, int DateAdded)
     {
 
         var orderSelected = new OrderSelected
@@ -39,9 +39,7 @@ public class CommentsController : ControllerBase
 
         var orderSelectedReflection = OrderSelectedReflectionTransformer.getOrderSelected(orderSelected);
 
-        IQueryable<Comment> result = _commentsDbContext.Comments
-            .Include(c => c.Files)
-            .Where(c => c.Parent == null);
+        IQueryable<Comment> result = _commentsDbContext.Comments.Where(c => c.Parent == null);
 
         Expression<Func<Comment, dynamic>> resultOrderPipeFunc = orderSelectedReflection.propertyName switch
         {
@@ -57,9 +55,9 @@ public class CommentsController : ControllerBase
             OrderType.Asc => result.OrderBy(resultOrderPipeFunc),
             _ => result.OrderByDescending(resultOrderPipeFunc)
         };
-
-        IQueryable<Comment> resultFilterPipe = resultOrderPipe.Skip(skip * 25).Take(25);
-
+        
+        IQueryable<Comment> resultFilterPipe = resultOrderPipe.Skip(skipPage * 25).Take(25);
+        
         return resultFilterPipe;
     }
 }
