@@ -12,6 +12,11 @@ export let Home = () =>  {
     })
     
     const [pagesNumber, setPagesNumber] = useState(1);
+    const [orderBySelected, setOrderBySelected] = useState({
+        UserName: -1, // means no order
+        Email: -1,
+        DateAdded: 1 // means descending order
+    })
     
     useEffect(() => {
         (async () => {
@@ -26,7 +31,8 @@ export let Home = () =>  {
         (async () => {
             const data = await axios.get<IComment[]>("api/comments", {
                 params: {
-                    skipPage: (currentPage - 1)
+                    skipPage: (currentPage - 1),
+                    ...orderBySelected
                 }
             });
 
@@ -35,7 +41,7 @@ export let Home = () =>  {
                 loading: false
             });
         })()
-    }, [pagesNumber])
+    }, [orderBySelected])
 
     const params = useParams();
 
@@ -45,16 +51,39 @@ export let Home = () =>  {
     const allPages = [...Array(pagesNumber).keys()].map(i => i + 1);
     const current5PageBlock = Math.ceil(currentPage / 5);
     const PageChangerArray = allPages.slice((current5PageBlock - 1) * 5, current5PageBlock * 5);
-
+    
+    function changeOrderNumber(orderNum:number) {
+        if((orderNum === -1) || (orderNum === 1)) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+        // If there is no order or desc, set asc
+        // If there is asc, set asc
+    }
+    
     return state.loading
         ? <p><em>Загрузка...</em></p>
         : <>
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Имя</th>
-                        <th>Email</th>
-                        <th>Дата создания</th>
+                        <th onClick={() => setOrderBySelected({
+                            UserName: changeOrderNumber(orderBySelected.UserName),
+                            DateAdded: -1,
+                            Email: -1
+                        })}>Имя</th>
+                        <th onClick={() => setOrderBySelected({
+                            UserName: orderBySelected.UserName,
+                            DateAdded: -1,
+                            Email: changeOrderNumber(orderBySelected.Email)
+                        })}>Email</th>
+                        <th onClick={() => setOrderBySelected({
+                            UserName: -1,
+                            DateAdded: changeOrderNumber(orderBySelected.Email),
+                            Email: -1
+                        })}>Дата создания</th>
                         <th>Комментарий</th>
                     </tr>
                 </thead>
