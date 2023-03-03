@@ -4,6 +4,7 @@ import {IComment} from "../../interfaces/IComment";
 import {Pagination, PaginationItem, PaginationLink} from "reactstrap";
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import HomeStyles from "../Home/Home.module.scss";
 
 export let Home = () =>  {
     const [state, setState] = useState({
@@ -20,8 +21,8 @@ export let Home = () =>  {
     
     useEffect(() => {
         (async () => {
-            const pagesNumberResponse = await axios.get("api/comments/GetCommentsPagesNumber");
-            const pagesNumberData = await pagesNumberResponse.data;
+            const pagesNumberResponse = await axios.get<number>("api/comments/GetCommentsPagesNumber");
+            const pagesNumberData = pagesNumberResponse.data;
             
             setPagesNumber(pagesNumberData);
         })()
@@ -62,6 +63,14 @@ export let Home = () =>  {
         // If there is no order or desc, set asc
         // If there is asc, set asc
     }
+
+    function getAscOrDescClassName(value: number) {
+        return value !== -1 ? 
+            value == 0 ? 
+                HomeStyles.TableHeaderOrderAsc : 
+                HomeStyles.TableHeaderOrderDesc
+            : ""
+    }
     
     return state.loading
         ? <p><em>Загрузка...</em></p>
@@ -69,22 +78,28 @@ export let Home = () =>  {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th onClick={() => setOrderBySelected({
+                        <th className={`${HomeStyles.TableHeader} ${HomeStyles.TableHeaderOrderSelector} 
+                        ${getAscOrDescClassName(orderBySelected.UserName)}`} 
+                            onClick={() => setOrderBySelected({
                             UserName: changeOrderNumber(orderBySelected.UserName),
                             DateAdded: -1,
                             Email: -1
                         })}>Имя</th>
-                        <th onClick={() => setOrderBySelected({
-                            UserName: orderBySelected.UserName,
+                        <th className={`${HomeStyles.TableHeader} ${HomeStyles.TableHeaderOrderSelector} 
+                        ${getAscOrDescClassName(orderBySelected.Email)}`}
+                            onClick={() => setOrderBySelected({
+                            UserName: -1,
                             DateAdded: -1,
                             Email: changeOrderNumber(orderBySelected.Email)
                         })}>Email</th>
-                        <th onClick={() => setOrderBySelected({
+                        <th className={`${HomeStyles.TableHeader} ${HomeStyles.TableHeaderOrderSelector} 
+                        ${getAscOrDescClassName(orderBySelected.DateAdded)}`}
+                            onClick={() => setOrderBySelected({
                             UserName: -1,
-                            DateAdded: changeOrderNumber(orderBySelected.Email),
+                            DateAdded: changeOrderNumber(orderBySelected.DateAdded),
                             Email: -1
                         })}>Дата создания</th>
-                        <th>Комментарий</th>
+                        <th className={HomeStyles.TableHeader}>Комментарий</th>
                     </tr>
                 </thead>
                 <tbody>
