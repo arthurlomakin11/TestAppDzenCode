@@ -23,11 +23,11 @@ public class Comment
     public DateTime DateAdded { get; set; }
 
     [NotMapped]
-    public File JsonFiles { get; set; }
+    public File[] JsonFiles { get; set; }
 
     public Comment() { }
     
-    public Comment(Comment newComment, File _JsonFiles)
+    public Comment(Comment newComment, File[] _JsonFiles)
     {
         Id = newComment.Id;
         ParentId = newComment.ParentId;
