@@ -12,7 +12,7 @@ static class TreeExtensions
         int? rootId = null)
     {
         return collection.Where(c => parentIdSelector(c) == rootId)
-            .Select(c => new Comment()
+            .Select(c => new Comment
             {
                 Id = c.Id, 
                 UserName = c.UserName,
