@@ -2,27 +2,30 @@
 import Styles from "./Comment.module.scss"
 import {IComment} from "../../interfaces/IComment";
 import HomeStyles from "../Home/Home.module.scss";
+import {Link} from "react-router-dom";
 
-export let Comment = ({comment, showOnlyText = false}:{comment:IComment, showOnlyText?: boolean}) => {
+export let Comment = ({comment, homePageView = false}:{comment:IComment, homePageView?: boolean}) => {
     return <div className={Styles.Comment}>
         <div className={Styles.CommentHead}>
             {
-                !showOnlyText ? <>
+                !homePageView ? <>
                     <span className={Styles.CommentUser}>{comment.UserName}</span>
 
                     <time className={Styles.CommentDateTime}>{comment.DateAdded?.toLocaleString()}</time>
-                </> : <></>
-            }
 
-            <div className={Styles.CommentMessage}>{comment.Text}</div>
+                    <div className={Styles.CommentMessage}>{comment.Text}</div>
 
-            {
-                !showOnlyText ? <>
                     <div className={Styles.CommentFooter}>
                         <a href="" className={Styles.CommentFooterLink}>Ответить</a>
                     </div>
                     <div className={Styles.CommentReplyForm}/>
-                </> : <></>
+                </> : <>
+                    <div className={Styles.CommentMessage}>
+                        <Link to={`./comment/${comment.Id}`}>
+                            {comment.Text}
+                        </Link>
+                    </div>
+                </>
             }
 
             {

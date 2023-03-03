@@ -109,7 +109,7 @@ export let Home = () =>  {
                                 <td>{comment.UserName}</td>
                                 <td>{comment.Email}</td>
                                 <td>{comment.DateAdded}</td>
-                                <td><Comment comment={comment} showOnlyText={true}/></td>
+                                <td><Comment comment={comment} homePageView={true}/></td>
                             </tr>
                         })
                     }
