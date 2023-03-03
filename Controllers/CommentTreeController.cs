@@ -1,7 +1,6 @@
 ﻿using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
 using File = TestAppDzenCode.Data.File;
@@ -22,91 +21,36 @@ public class CommentTreeController : ControllerBase
         _commentsDbContext = commentsDbContext;
         _commentsLinq2DbContext = commentsDbContext.CreateLinqToDBContext();
     }
-
+    
     [HttpGet]
     public IEnumerable<Comment> Get(int Id)
     {
-        var fileCte = (from f in _commentsLinq2DbContext.GetTable<File>()
-            select f).AsCte();
-        
         var commentsHierarchyCteAns = _commentsLinq2DbContext.GetCte<Comment>(commentHierarchy =>
         {
-            return
-                (
-                    from c in _commentsLinq2DbContext.GetTable<Comment>()
-                    select new Comment
-                    {
-                        Id = c.Id,
-                        ParentId = c.ParentId,
-                        Email = c.Email,
-                        UserName = c.UserName,
-                        Text = c.Text,
-                        DateAdded = c.DateAdded,
-                        Files = new List<File>(fileCte.Where(f => f.CommentId == c.Id))
-                    }
-                )
+            return _commentsLinq2DbContext.GetTable<Comment>().Where(c => c.ParentId == Id)
                 .Concat
                 (
                     from c in _commentsLinq2DbContext.GetTable<Comment>()
                     from c2 in commentHierarchy.InnerJoin(eh => c.Id == eh.ParentId)
-                    select new Comment
-                    {
-                        Id = c.Id,
-                        ParentId = c.ParentId,
-                        Email = c.Email,
-                        UserName = c.UserName,
-                        Text = c.Text,
-                        DateAdded = c.DateAdded,
-                        Files = new List<File>(fileCte.Where(f => f.CommentId == c.Id))
-                    }
+                    select c
                 );
         });
         
         var commentsHierarchyCteDes = _commentsLinq2DbContext.GetCte<Comment>(commentHierarchy =>
         {
-            return
-                (
-                    from c in _commentsLinq2DbContext.GetTable<Comment>()
-                    select new Comment
-                    {
-                        Id = c.Id,
-                        ParentId = c.ParentId,
-                        Email = c.Email,
-                        UserName = c.UserName,
-                        Text = c.Text,
-                        DateAdded = c.DateAdded,
-                        Files = new List<File>(fileCte.Where(f => f.CommentId == c.Id))
-                    }
-                )
+            return _commentsLinq2DbContext.GetTable<Comment>().Where(c => c.ParentId == Id)
                 .Concat
                 (
                     from c in _commentsLinq2DbContext.GetTable<Comment>()
                     from c2 in commentHierarchy.InnerJoin(eh => c.ParentId == eh.Id)
-                    select new Comment
-                    {
-                        Id = c.Id,
-                        ParentId = c.ParentId,
-                        Email = c.Email,
-                        UserName = c.UserName,
-                        Text = c.Text,
-                        DateAdded = c.DateAdded,
-                        Files = new List<File>(fileCte.Where(f => f.CommentId == c.Id))
-                    }
+                    select c
                 );
         });
 
-        var x = commentsHierarchyCteAns.Union(commentsHierarchyCteDes)
-            .Where(c => c.Id == 3 || c.Id == 4 || c.Id == 5);
-        
-        Console.WriteLine(x.ToQueryString());
+        var result = commentsHierarchyCteAns.Union(commentsHierarchyCteDes);
 
-        x.ToList();
-        
-        var result = _commentsDbContext.Comments
-            .Include(c => c.Files)
-            .Where(c => c.Id == 3 || c.Id == 4 || c.Id == 5)
-            .ToList();
+        var resultTree = result.ToList().GenerateTree(c => c.Id, c => c.ParentId);
 
-        return result.GenerateTree(c => c.Id, c => c.ParentId);
+        return resultTree;
     }
 }
