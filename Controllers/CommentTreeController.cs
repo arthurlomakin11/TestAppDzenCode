@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
 
 namespace TestAppDzenCode.Controllers;
@@ -17,14 +18,14 @@ public class CommentTreeController : ControllerBase
         _commentsDbContext = commentsDbContext;
     }
 
-    [HttpGet()]
+    [HttpGet]
     public IEnumerable<Comment> Get(int Id)
     {
         var result = _commentsDbContext.Comments
             .Include(c => c.Files)
-            .Include(c => c.Comments)
-            .Where(c => c.Parent == null);
+            .Where(c => c.Id == 3 || c.Id == 4 || c.Id == 5)
+            .ToList();
 
-        return result;
+        return result.GenerateTree(c => c.Id, c => c.ParentId);
     }
 }
