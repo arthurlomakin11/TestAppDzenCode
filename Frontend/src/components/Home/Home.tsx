@@ -21,7 +21,7 @@ export let Home = () =>  {
     
     useEffect(() => {
         (async () => {
-            const pagesNumberResponse = await axios.get<number>("api/getCommentsPagesNumber");
+            const pagesNumberResponse = await axios.get<number>("api/comments/getCommentsPagesNumber");
             const pagesNumberData = pagesNumberResponse.data;
             
             setPagesNumber(pagesNumberData);

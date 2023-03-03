@@ -4,7 +4,7 @@ using TestAppDzenCode.Data;
 namespace TestAppDzenCode.Controllers;
 
 [ApiController]
-[Route("api/getCommentsPagesNumber")]
+[Route("api/comments/getCommentsPagesNumber")]
 public class CommentsPageNumberController : ControllerBase
 {
     private readonly ILogger<CommentsPageNumberController> _logger;

@@ -62,14 +62,4 @@ public class CommentsController : ControllerBase
 
         return resultFilterPipe;
     }
-
-    [HttpGet("GetCommentsPagesNumber")]
-    public double GetCommentsPagesNumber()
-    {
-        var result = _commentsDbContext.Comments.Count();
-
-        var pagesCount = Math.Ceiling(result / 25.0);
-        
-        return pagesCount;
-    }
 }
