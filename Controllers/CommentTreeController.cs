@@ -1,5 +1,6 @@
 ﻿using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
+using LinqToDB.Include;
 using Microsoft.AspNetCore.Mvc;
 using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
@@ -27,7 +28,6 @@ public class CommentTreeController : ControllerBase
         var commentsHierarchyCteAns = _commentsLinq2DbContext.GetCte<Comment>(commentHierarchy =>
         {
             return _commentsLinq2DbContext.GetTable<Comment>()
-                .Where(c => c.ParentId == Id)
                 .Concat
                 (
                     from c in _commentsLinq2DbContext.GetTable<Comment>()
@@ -39,7 +39,6 @@ public class CommentTreeController : ControllerBase
         var commentsHierarchyCteDes = _commentsLinq2DbContext.GetCte<Comment>(commentHierarchy =>
         {
             return _commentsLinq2DbContext.GetTable<Comment>()
-                .Where(c => c.ParentId == Id)
                 .Concat
                 (
                     from c in _commentsLinq2DbContext.GetTable<Comment>()
@@ -49,10 +48,9 @@ public class CommentTreeController : ControllerBase
         });
 
         var result = commentsHierarchyCteAns.Union(commentsHierarchyCteDes);
-        
-        
+
         var resultTree = result
-            .LoadWith(c => c.Files)
+            .Include(c => c.Files)
             .ToList()
             .GenerateTree(c => c.Id, c => c.ParentId);
 
