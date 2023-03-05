@@ -50,7 +50,7 @@ export let CommentPage = () =>  {
                         {
                             state.comments.map(comment => {
                                 return <li className={HomeStyles.ContentListItem} key={comment.Id}>
-                                    <Comment comment={comment} onReplyButtonClick={(c) => setReplyFormCommentId(c.Id)}/>
+                                    <Comment comment={comment} onReplyOpenButtonClick={(commentId) => setReplyFormCommentId(commentId)}/>
                                 </li>
                             })
                         }

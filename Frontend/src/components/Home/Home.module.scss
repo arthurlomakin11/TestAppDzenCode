@@ -12,20 +12,14 @@
 }
 
 .ContentListItem {
-    @extend .ContentList;
     position: relative;
     box-sizing: border-box;
-    padding: 10px 0 14px;
+    padding: 10px 0 0;
 }
 
 .ContentListNestedComments {
     @extend .ContentList;
     padding: 0 0 0 20px;
-}
-
-.ContentListItemComment {
-    @extend .ContentListItem;
-    padding: 0;
 }
 
 .TableHeader {
