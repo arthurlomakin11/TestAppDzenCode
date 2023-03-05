@@ -5,7 +5,7 @@ import HomeStyles from "../Home/Home.module.scss";
 import {Link} from "react-router-dom";
 import {CommentReplyForm} from "../CommentReplyForm/CommentReplyForm";
 
-export let Comment = ({comment, homePageView = false}:{comment:IComment, homePageView?: boolean}) => {
+export let Comment = ({comment, homePageView = false, onReplyButtonClick}:{comment:IComment, homePageView?: boolean, onReplyButtonClick?: (c:IComment) => void}) => {
     return <div className={Styles.Comment}>
         <div className={Styles.CommentHead}>
             {
@@ -17,9 +17,9 @@ export let Comment = ({comment, homePageView = false}:{comment:IComment, homePag
                     <div className={Styles.CommentMessage}>{comment.Text}</div>
 
                     <div className={Styles.CommentFooter}>
-                        <a href="" className={Styles.CommentFooterLink}>Ответить</a>
+                        <a onClick={() => onReplyButtonClick ? onReplyButtonClick(comment) : {}} className={Styles.CommentFooterLink}>Ответить</a>
                     </div>
-                    <CommentReplyForm/>
+                    <CommentReplyForm id={comment.Id}/>
                 </> : <>
                     <div className={Styles.CommentMessage}>
                         <Link to={`./comment/${comment.Id}`}>
@@ -34,7 +34,7 @@ export let Comment = ({comment, homePageView = false}:{comment:IComment, homePag
                     <li className={HomeStyles.ContentListItem}>
                         {
                             comment.Comments.map(children => {
-                                return <Comment key={children.Id} comment={children}/>
+                                return <Comment key={children.Id} comment={children} onReplyButtonClick={onReplyButtonClick}/>
                             })
                         }
                     </li>

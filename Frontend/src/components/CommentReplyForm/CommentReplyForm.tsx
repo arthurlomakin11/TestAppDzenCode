@@ -1,9 +1,11 @@
 ﻿import Styles from "./CommentReplyForm.module.scss";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import {ReplyFormCommentIdContext} from "./ReplyFormContext";
 
-export let CommentReplyForm = () => {
+export let CommentReplyForm = ({id}:{id:number}) => {
     const [message, setMessage] = useState('');
-
+    const ReplyFormCommentId:number = useContext(ReplyFormCommentIdContext); 
+        
     const handleMessageChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setMessage(event.target.value);
     };
@@ -12,7 +14,7 @@ export let CommentReplyForm = () => {
         /*setMessage()*/
     }
     
-    return <div className={Styles.CommentReplyForm}>
+    return ReplyFormCommentId == id ? <div className={Styles.CommentReplyForm}>
         <ul>
             <li><button onClick={ToolbarElementClick}>a</button></li>
             <li>i</li>
@@ -20,5 +22,5 @@ export let CommentReplyForm = () => {
             <li>code</li>
         </ul>
         <textarea value={message} onChange={handleMessageChange}/>
-    </div>
+    </div> : <></>
 }

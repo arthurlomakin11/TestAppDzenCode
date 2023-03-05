@@ -5,6 +5,7 @@ import {CommentsHeader} from "../Comment/CommentsHeader";
 import {IComment} from "../../interfaces/IComment";
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import {ReplyFormCommentIdContext} from "../CommentReplyForm/ReplyFormContext";
 
 export let CommentPage = () =>  {
     const [state, setState] = useState({
@@ -35,6 +36,8 @@ export let CommentPage = () =>  {
             }
         })()
     }, [])
+    
+    const [replyFormCommentId, setReplyFormCommentId] = useState(0);
 
     return state.loading
         ? <p><em>Loading...</em></p>
@@ -42,15 +45,17 @@ export let CommentPage = () =>  {
             <div className={HomeStyles.CommentsSection}>
                 <CommentsHeader/>
 
-                <ul className={HomeStyles.ContentListComments}>
-                    {
-                        state.comments.map(comment => {
-                            return <li className={HomeStyles.ContentListItem} key={comment.Id}>
-                                <Comment comment={comment}/>
-                            </li>
-                        })
-                    }
-                </ul>
+                <ReplyFormCommentIdContext.Provider value={replyFormCommentId}>
+                    <ul className={HomeStyles.ContentListComments}>
+                        {
+                            state.comments.map(comment => {
+                                return <li className={HomeStyles.ContentListItem} key={comment.Id}>
+                                    <Comment comment={comment} onReplyButtonClick={(c) => setReplyFormCommentId(c.Id)}/>
+                                </li>
+                            })
+                        }
+                    </ul>
+                </ReplyFormCommentIdContext.Provider>
             </div>
         </div>;
 }
