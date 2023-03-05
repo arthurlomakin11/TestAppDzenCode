@@ -21,4 +21,9 @@ public class Comment
     public IEnumerable<Comment> Comments { get; set; }
     
     public DateTime DateAdded { get; set; }
+
+    public Comment()
+    {
+        DateAdded = DateTime.UtcNow;
+    }
 }
