@@ -50,3 +50,51 @@
   font: 14px/1.6 Verdana,Geneva,sans-serif;
   resize: vertical;
 }
+
+.Captcha {
+  margin: 10px 0;
+}
+
+.Button {
+  box-shadow: none;
+  color: #fff;
+  padding: 0 13px;
+  height: 36px;
+  border-radius: 3px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  appearance: none;
+  touch-action: manipulation;
+  margin-right: 10px;
+}
+
+.Button:hover {
+  border-color: transparent;
+  background-color: #8fb3cd;
+  color: #fff;
+  text-decoration: none;
+}
+
+.ButtonFill {
+  border: 1px solid transparent;
+  background-color: #7aa1bd;
+}
+
+.ButtonNoFill {
+  border: 1px solid #7aa1bd;
+  background-color: transparent;
+  color: #7aa1bd;
+}
+
+.ButtonNoFill:hover {
+  background-color: #7aa1bd;
+}
+
+.Label {
+  width: 50px;
+}
+
+.InputBlock {
+  padding: 10px 0;
+}
