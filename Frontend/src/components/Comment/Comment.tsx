@@ -24,7 +24,7 @@ export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick}:{c
 
                     <time className={Styles.CommentDateTime}>{new Date(comment.DateAdded).toLocaleString()}</time>
 
-                    <div className={Styles.CommentMessage}>{comment.Text}</div>
+                    <div className={Styles.CommentMessage} dangerouslySetInnerHTML={{__html: comment.Text}}/>
 
                     <div className={Styles.CommentFooter}>
                         <button onClick={onReplyOpenButtonClick ? () => onReplyOpenButtonClick(comment.Id) : () => {}} className={Styles.CommentFooterLink}>Ответить</button>
