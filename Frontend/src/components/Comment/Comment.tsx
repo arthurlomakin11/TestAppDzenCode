@@ -7,11 +7,13 @@ import {CommentReplyForm} from "../CommentReplyForm/CommentReplyForm";
 
 export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick}:{comment:IComment, homePageView?: boolean, onReplyOpenButtonClick?: (c:number) => void}) => {
     let addReplyEvent = (c: IComment) => {
-        setComments([...comment.Comments, c]);
+        setComments([...comments, c]);
     }
     const [comments, setComments] = useState<IComment[]>([]);
     useEffect(() => {
-        setComments(comment?.Comments);
+        if(comment?.Comments) {
+            setComments(comment.Comments)
+        }
     }, [])
     
     return <div className={Styles.Comment}>

@@ -1,0 +1,1 @@
+﻿export let PUBLIC_RECAPTCHA_SITE_KEY = "6LeQYdckAAAAAAb4J9Exgz61cbfbeotvIf2cDPSh";

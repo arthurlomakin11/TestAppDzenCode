@@ -1,12 +1,15 @@
 ﻿import Styles from "./CommentReplyForm.module.scss";
-import React, {useContext, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import {ReplyFormCommentIdContext} from "./ReplyFormContext";
 import axios from "axios";
 import {IComment} from "../../interfaces/IComment";
+import ReCAPTCHA from "react-google-recaptcha";
+import {PUBLIC_RECAPTCHA_SITE_KEY} from "../../globalVariables";
 
 export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:number, addReplyEvent?: (c: IComment) => void, onReplyOpenButtonClick: (c:number) => void}) => {
     const [message, setMessage] = useState('');
-    const ReplyFormCommentId:number = useContext(ReplyFormCommentIdContext); 
+    const ReplyFormCommentId:number = useContext(ReplyFormCommentIdContext);
+    const reRef = useRef<ReCAPTCHA>(null);
         
     const handleMessageChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setMessage(event.target.value);
@@ -17,14 +20,16 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
     }
 
     async function SendReplyButtonOnClick() {
-        const response = await axios.post<IComment>("api/comment/reply", null, {
-            params: {
-                RootCommentId: id,
-                UserName: "Name",
-                Email: "@gmail.com",
-                Text: message
-            }
+        const token = reRef?.current?.getValue();
+        
+        const response = await axios.post<IComment>("api/comment/reply", {
+            RootCommentId: id,
+            UserName: "Name",
+            Email: "@gmail.com",
+            Text: message,
+            Token: token
         });
+        reRef?.current?.reset();
         if(response.status == 200) {
             addReplyEvent ? addReplyEvent(response.data) : (() => {})();
             onReplyOpenButtonClick(0);
@@ -63,6 +68,7 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
             </li>
         </ul>
         <textarea className={Styles.TextArea} value={message} onChange={handleMessageChange}/>
+        <ReCAPTCHA sitekey={PUBLIC_RECAPTCHA_SITE_KEY} ref={reRef}/>
         <button onClick={SendReplyButtonOnClick}>Отправить</button>
     </div> : <></>
 }

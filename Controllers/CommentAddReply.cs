@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
 
 namespace TestAppDzenCode.Controllers;
@@ -9,24 +10,42 @@ public class CommentAddReply : ControllerBase
 {
     private readonly ILogger<CommentAddReply> _logger;
     private readonly CommentsDbContext _commentsDbContext;
+    private readonly ReCaptcha _reCaptcha;
 
-    public CommentAddReply(ILogger<CommentAddReply> logger, CommentsDbContext commentsDbContext)
+    public CommentAddReply(ILogger<CommentAddReply> logger, CommentsDbContext commentsDbContext, ReCaptcha reCaptcha)
     {
         _logger = logger;
         _commentsDbContext = commentsDbContext;
+        _reCaptcha = reCaptcha;
+    }
+
+    public class ReplyToCommentBody
+    {
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Text { get; set; }
+        public int RootCommentId { get; set; }
+
+        public string Token { get; set; }
     }
     
     [HttpPost]
-    public Comment ReplyToComment(string UserName, string Email, string Text, int RootCommentId)
+    public async Task<ActionResult<Comment>> ReplyToComment([FromBody] ReplyToCommentBody Body)
     {
+        var reCaptchaTokenValid = await _reCaptcha.IsValid(Body.Token);
+        if (!reCaptchaTokenValid)
+        {
+            return new ActionResult<Comment>(BadRequest("ReCaptcha Token Validation Error"));
+        }
+        
         var newComment = _commentsDbContext.Comments.Add(new Comment
         {
-            ParentId = RootCommentId,
-            Text = Text,
-            UserName = UserName,
-            Email = Email
+            ParentId = Body.RootCommentId,
+            Text = Body.Text,
+            UserName = Body.UserName,
+            Email = Body.Email
         });
-        _commentsDbContext.SaveChanges();
+        await _commentsDbContext.SaveChangesAsync();
         return newComment.Entity;
     }
 }
