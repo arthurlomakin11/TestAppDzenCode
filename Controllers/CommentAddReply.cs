@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
 
@@ -21,7 +22,9 @@ public class CommentAddReply : ControllerBase
 
     public class ReplyToCommentBody
     {
+        [RegularExpression("^[a-zA-Z0-9]*$")]
         public string UserName { get; set; }
+        [EmailAddress]
         public string Email { get; set; }
         public string Text { get; set; }
         public int RootCommentId { get; set; }
