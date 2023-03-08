@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using TestAppDzenCode.Controllers.Extensions;
 using TestAppDzenCode.Data;
@@ -33,22 +34,35 @@ public class CommentAddReply : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<Comment>> ReplyToComment([FromBody] ReplyToCommentBody Body)
+    public async Task<ActionResult<Comment>> ReplyToComment([FromBody] ReplyToCommentBody body)
     {
-        var reCaptchaTokenValid = await _reCaptcha.IsValid(Body.Token);
+        var reCaptchaTokenValid = await _reCaptcha.IsValid(body.Token);
         if (!reCaptchaTokenValid)
         {
             return new ActionResult<Comment>(BadRequest("ReCaptcha Token Validation Error"));
         }
-        
+
         var newComment = _commentsDbContext.Comments.Add(new Comment
         {
-            ParentId = Body.RootCommentId,
-            Text = Body.Text,
-            UserName = Body.UserName,
-            Email = Body.Email
+            ParentId = body.RootCommentId,
+            Text = SanitizeHtmlText(body.Text),
+            UserName = body.UserName,
+            Email = body.Email
         });
         await _commentsDbContext.SaveChangesAsync();
         return newComment.Entity;
+    }
+
+    public string SanitizeHtmlText(string text)
+    {
+        var sanitizer = new HtmlSanitizer(new HtmlSanitizerOptions
+        {
+            AllowedTags = new HashSet<string> {"i", "strong", "a", "code" },
+            AllowedAttributes = new SortedSet<string> { "href" }
+        });
+
+        var newText = sanitizer.Sanitize(text);
+        
+        return newText;
     }
 }
