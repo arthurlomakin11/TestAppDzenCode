@@ -5,7 +5,12 @@ import HomeStyles from "../Home/Home.module.scss";
 import {Link} from "react-router-dom";
 import {CommentReplyForm} from "../CommentReplyForm/CommentReplyForm";
 
-export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick}:{comment:IComment, homePageView?: boolean, onReplyOpenButtonClick?: (c:number) => void}) => {
+export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick, preview = false}:{
+    comment:IComment, 
+    homePageView?: boolean, 
+    onReplyOpenButtonClick?: (c:number) => void,
+    preview?: boolean
+}) => {
     let addReplyEvent = (c: IComment) => {
         setComments([...comments, c]);
     }
@@ -16,7 +21,7 @@ export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick}:{c
         }
     }, [])
     
-    return <div className={Styles.Comment}>
+    return <div className={`${Styles.Comment} ${preview ? Styles.CommentPreview : ""}`}>
         <div className={Styles.CommentHead}>
             {
                 !homePageView ? <>
@@ -26,10 +31,14 @@ export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick}:{c
 
                     <div className={Styles.CommentMessage} dangerouslySetInnerHTML={{__html: comment.Text}}/>
 
-                    <div className={Styles.CommentFooter}>
-                        <button onClick={onReplyOpenButtonClick ? () => onReplyOpenButtonClick(comment.Id) : () => {}} className={Styles.CommentFooterLink}>Ответить</button>
-                    </div>
-                    <CommentReplyForm id={comment.Id} addReplyEvent={addReplyEvent} onReplyOpenButtonClick={onReplyOpenButtonClick ? onReplyOpenButtonClick : () => {}}/>
+                    {
+                        !preview ? <>
+                            <div className={Styles.CommentFooter}>
+                                <button onClick={onReplyOpenButtonClick ? () => onReplyOpenButtonClick(comment.Id) : () => {}} className={Styles.CommentFooterLink}>Ответить</button>
+                            </div>
+                            <CommentReplyForm id={comment.Id} addReplyEvent={addReplyEvent} onReplyOpenButtonClick={onReplyOpenButtonClick ? onReplyOpenButtonClick : () => {}}/>
+                        </> : <></>
+                    }
                 </> : <>
                     <div className={Styles.CommentMessage}>
                         <Link to={`./comment/${comment.Id}`}>
