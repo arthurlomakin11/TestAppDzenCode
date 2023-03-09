@@ -1,4 +1,5 @@
-﻿using TestAppDzenCode.Data;
+﻿using System.Drawing;
+using TestAppDzenCode.Data;
 using File = TestAppDzenCode.Data.File;
 
 namespace TestAppDzenCode.Controllers.Extensions;
@@ -16,6 +17,8 @@ public class FileHandler
     {
         var fileType = GetFileType(file);
 
+        file = ProcessFile(file, fileType);
+
         var uniqueFileName = GetUniqueFileName(file.FileName);
         var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
         var filePath = Path.Combine(uploads, uniqueFileName);
@@ -28,6 +31,30 @@ public class FileHandler
             Src = Path.Combine("./uploads", uniqueFileName),
             FileType = fileType
         };
+    }
+
+    private static IFormFile ProcessFile(IFormFile file, FileType fileType)
+    {
+        switch (fileType)
+        {
+            case FileType.TextFile when file.Length >= 100000:
+                throw new Exception("Text file size is bigger than 100KB");
+            case FileType.Image:
+            {
+                var readStream = file.OpenReadStream();
+
+                var img = Image.FromStream(readStream);
+                var resizedImg = ImageManipulator.ScaleImage(img, 320, 240);
+
+                var stream = new MemoryStream();
+                resizedImg.Save(stream, img.RawFormat);
+                stream.Position = 0;
+
+                return new FormFile(stream, 0, stream.Length, file.Name, file.FileName);
+            }
+            default:
+                return file;
+        }
     }
 
     private static FileType GetFileType(IFormFile file)
