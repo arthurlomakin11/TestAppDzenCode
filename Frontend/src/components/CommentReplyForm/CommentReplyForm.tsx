@@ -1,5 +1,5 @@
 ﻿import Styles from "./CommentReplyForm.module.scss";
-import React, {ChangeEvent, FormEvent, MouseEvent, useContext, useRef, useState} from "react";
+import React, {ChangeEvent, createRef, FormEvent, MouseEvent, useContext, useRef, useState} from "react";
 import {ReplyFormCommentIdContext} from "./ReplyFormContext";
 import axios, {AxiosHeaders} from "axios";
 import {IComment} from "../../interfaces/IComment";
@@ -19,9 +19,19 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
     const [userName, setUserName] = useState<string>("");
     const [previewComment, setPreviewComment] = useState<IComment | null>(null);
     const [fileList, setFileList] = useState<FileList | null>(null);
+    const [inputKey, setInputKey] = useState(Math.random().toString(5));
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFileList(e.target.files);
+        if(e.target.files) {
+            for(let file of e.target.files) {
+                if(file.type == "text/plain" && file.size > 100000) {
+                    alert(`Текстовый файл ${file.name} не может быть больше 100КБ`);
+                    setInputKey(""); // set inputKey to "", it's rerendered without files selected
+                    return;
+                }
+            }
+            setFileList(e.target.files);
+        }
     };
         
     const handleMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,6 +64,7 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
             Files: fileList
         });
         reRef?.current?.reset();
+        console.log(response.data)
         if(response.status == 200) {
             addReplyEvent ? addReplyEvent(response.data) : (() => {})();
             onReplyOpenButtonClick(0);
@@ -112,7 +123,8 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
             
             <textarea className={Styles.TextArea} value={message} onChange={handleMessageChange} onSelect={handleTextAreaClick} required={true}/>
             
-            <input type="file" onChange={handleFileChange} multiple accept="image/png, image/gif, image/jpeg, .txt" />
+            <input type="file" onChange={handleFileChange} multiple accept="image/png, image/gif, image/jpeg, .txt"
+                   key={inputKey || '' }/>
             
             <ReCAPTCHA className={Styles.Captcha} sitekey={PUBLIC_RECAPTCHA_SITE_KEY} ref={reRef}/>
             
