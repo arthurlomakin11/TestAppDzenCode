@@ -9,10 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews()
-    .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.PropertyNamingPolicy = null;
+        opts.JsonSerializerOptions.MaxDepth = 300;
+    });
 
 var connectionString = builder.Configuration.GetConnectionString("DzenCodeConnectionString");
-builder.Services.AddDbContext<CommentsDbContext>(o =>o.UseNpgsql(connectionString));
+builder.Services.AddDbContext<CommentsDbContext>(o => o.UseNpgsql(connectionString));
 LinqToDBForEFTools.Initialize();
 
 builder.Services.AddHttpClient<ReCaptcha>(x =>
@@ -40,12 +44,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
-;
 
 app.Run();
