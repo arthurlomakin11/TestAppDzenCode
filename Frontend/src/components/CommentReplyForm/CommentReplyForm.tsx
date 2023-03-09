@@ -116,6 +116,7 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
                        id="username"
                        placeholder="Vasya"
                        pattern="^[a-zA-Z0-9]*$"
+                       required={true}
                 />
             </div>
             
