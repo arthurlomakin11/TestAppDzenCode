@@ -1,0 +1,19 @@
+WITH RECURSIVE 
+	--  ancestors
+    rec_a (Id, "ParentId", UserName, Email, Text) AS
+    (
+      SELECT c2."Id", c2."ParentId", c2."UserName", c2."Email", c2."Text" FROM "Comments" c2 
+      UNION ALL
+      SELECT c2."Id", c2."ParentId", c2."UserName", c2."Email", c2."Text" FROM rec_a, "Comments" c2 
+      WHERE c2."Id" = rec_a."ParentId"
+    ),
+    -- descendants 
+    rec_d (Id, "ParentId", UserName, Email, Text) AS
+    (
+      SELECT c."Id", c."ParentId", c."UserName", c."Email", c."Text" FROM "Comments" c
+      UNION ALL
+      SELECT c."Id", c."ParentId", c."UserName", c."Email", c."Text" FROM rec_d, "Comments" c where c."ParentId" = rec_d.Id
+    )
+SELECT Id, "ParentId", UserName, Email, Text FROM rec_a
+UNION 
+SELECT Id, "ParentId", UserName, Email, Text FROM rec_d;
