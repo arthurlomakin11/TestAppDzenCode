@@ -1,7 +1,8 @@
 ﻿services:
   website:
-    build: .
     image: website
+    build: .
+    restart: always
     container_name: website
     ports:
       - "4000:80"
@@ -12,7 +13,10 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Doker
   db:
-    image: postgres:13.10
+    image: db
+    build: 
+      context: .
+      dockerfile: db.Dockerfile
     restart: always
     container_name: db
     ports:
@@ -21,6 +25,7 @@
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=user
     volumes:
+     - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
       - db:/var/lib/postgresql/data
 volumes:
   db:
