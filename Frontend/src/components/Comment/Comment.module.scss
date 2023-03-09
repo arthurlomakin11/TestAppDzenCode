@@ -51,3 +51,32 @@
   display: inline-flex;
   align-items: center;
 }
+
+.FileList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.FileListImg {
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  border: 3px solid black;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.FileListImg:hover {
+  cursor: pointer;
+}
+
+.FileListSvg {
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  border: 3px solid black;
+  border-radius: 5px;
+  object-fit: cover;
+}

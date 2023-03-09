@@ -13,12 +13,14 @@ public class CommentAddReply : ControllerBase
     private readonly ILogger<CommentAddReply> _logger;
     private readonly CommentsDbContext _commentsDbContext;
     private readonly ReCaptcha _reCaptcha;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public CommentAddReply(ILogger<CommentAddReply> logger, CommentsDbContext commentsDbContext, ReCaptcha reCaptcha)
+    public CommentAddReply(ILogger<CommentAddReply> logger, CommentsDbContext commentsDbContext, ReCaptcha reCaptcha, IWebHostEnvironment webHostEnvironment)
     {
         _logger = logger;
         _commentsDbContext = commentsDbContext;
         _reCaptcha = reCaptcha;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     public class ReplyToCommentBody
@@ -34,7 +36,7 @@ public class CommentAddReply : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<Comment>> ReplyToComment([FromBody] ReplyToCommentBody body)
+    public async Task<ActionResult<Comment>> ReplyToComment([FromForm] ReplyToCommentBody body, [FromForm(Name = "Files[]")] IFormFileCollection files)
     {
         var reCaptchaTokenValid = await _reCaptcha.IsValid(body.Token);
         if (!reCaptchaTokenValid)
@@ -42,14 +44,20 @@ public class CommentAddReply : ControllerBase
             return new ActionResult<Comment>(BadRequest("ReCaptcha Token Validation Error"));
         }
 
+        var filesLoaded = from file in files
+            let fileHandler = new FileHandler(_webHostEnvironment)
+            select fileHandler.SaveFile(file);
+
         var newComment = _commentsDbContext.Comments.Add(new Comment
         {
             ParentId = body.RootCommentId,
             Text = SanitizeHtmlText(body.Text),
             UserName = body.UserName,
-            Email = body.Email
+            Email = body.Email,
+            Files = filesLoaded.ToList()
         });
         await _commentsDbContext.SaveChangesAsync();
+        
         return newComment.Entity;
     }
 
