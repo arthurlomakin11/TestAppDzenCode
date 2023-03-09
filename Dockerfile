@@ -4,6 +4,13 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+# Install NodeJs
+RUN apt-get update && \
+apt-get install -y wget && \
+apt-get install -y gnupg2 && \
+wget -qO- https://deb.nodesource.com/setup_16.x | bash - && \
+apt-get install -y nodejs
+# End Install
 WORKDIR /src
 COPY ["TestAppDzenCode.csproj", "./"]
 RUN dotnet restore "TestAppDzenCode.csproj"

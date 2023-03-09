@@ -1,0 +1,27 @@
+﻿services:
+  website:
+    build: .
+    image: website
+    container_name: website
+    ports:
+      - "4000:80"
+    depends_on:
+      - db
+    volumes:
+      - './:/src'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Doker
+  db:
+    image: postgres:13.10
+    restart: always
+    container_name: db
+    ports:
+      - "8000:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

@@ -26,6 +26,12 @@ builder.Services.AddHttpClient<ReCaptcha>(x =>
 
 var app = builder.Build();
 
+using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<CommentsDbContext>();
+    context.Database.Migrate();
+}
+
 app.UseExceptionHandler(c => c.Run(async context =>
 {
     var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
@@ -40,7 +46,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 

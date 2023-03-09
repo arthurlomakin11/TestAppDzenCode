@@ -1,6 +1,4 @@
-﻿using LinqToDB.EntityFrameworkCore;
-
-namespace TestAppDzenCode.Data;
+﻿namespace TestAppDzenCode.Data;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -22,11 +20,14 @@ public class CommentsDbContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{envName}.json")
             .Build();
-
+        
         var connectionString = configuration.GetConnectionString("DzenCodeConnectionString");
         optionsBuilder.UseNpgsql(connectionString);
     }
