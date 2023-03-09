@@ -112,7 +112,7 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
             
             <textarea className={Styles.TextArea} value={message} onChange={handleMessageChange} onSelect={handleTextAreaClick} required={true}/>
             
-            <input type="file" onChange={handleFileChange} multiple />
+            <input type="file" onChange={handleFileChange} multiple accept="image/png, image/gif, image/jpeg, .txt" />
             
             <ReCAPTCHA className={Styles.Captcha} sitekey={PUBLIC_RECAPTCHA_SITE_KEY} ref={reRef}/>
             

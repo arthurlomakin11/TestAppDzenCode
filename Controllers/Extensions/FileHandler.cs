@@ -60,12 +60,12 @@ public class FileHandler
     private static FileType GetFileType(IFormFile file)
     {
         var extension = Path.GetExtension(file.FileName);
-        if (extension is ".txt" or ".jpg" or ".gif" or ".png")
+        if (extension is ".txt" or ".jpg" or ".jpeg" or ".gif" or ".png")
         {
             return extension switch
             {
                 ".txt" => FileType.TextFile,
-                ".jpg" or ".gif" or ".png" => FileType.Image,
+                ".jpg" or ".jpeg" or ".gif" or ".png" => FileType.Image,
                 _ => throw new Exception("File type is not matching")
             };
         }
