@@ -48,8 +48,11 @@ public class CommentTreeController : ControllerBase
                 );
         });
 
-        var result = commentsHierarchyCteAns.Union(commentsHierarchyCteDes);
-        
+        var resultCteUnion = commentsHierarchyCteAns.Union(commentsHierarchyCteDes);
+
+        // If there is no children, result is empty, so add the root
+        var rootSelector = _commentsLinq2DbContext.GetTable<Comment>().Where(c => c.Id == Id);
+        var result = resultCteUnion.Union(rootSelector);
         
         var resultTree = result
             .LoadWith(c => c.Files)
