@@ -18,6 +18,8 @@ export let Home = () =>  {
         Email: -1,
         DateAdded: 1 // means descending order
     })
+
+    const [currentPage, setCurrentPage] = useState(1);
     
     useEffect(() => {
         (async () => {
@@ -42,11 +44,9 @@ export let Home = () =>  {
                 loading: false
             });
         })()
-    }, [orderBySelected])
-
-    const params = useParams();
-
-    const currentPage = parseInt(!!params.pageNumber ? params.pageNumber : "1");
+    }, [orderBySelected, currentPage])
+    
+    
     const previousPage = currentPage > 1 ? currentPage - 1 : currentPage;
     const nextPage = currentPage < pagesNumber ? currentPage + 1 : currentPage;
     const allPages = [...Array(pagesNumber).keys()].map(i => i + 1);
@@ -117,19 +117,19 @@ export let Home = () =>  {
             </table>
             <Pagination>
                 <PaginationItem disabled={currentPage == previousPage}>
-                    <PaginationLink previous href={`./page/${previousPage}`} />
+                    <PaginationLink previous onClick={() => setCurrentPage(previousPage)}/>
                 </PaginationItem>
                 {
                     PageChangerArray.map(page => {
                         return <PaginationItem active={currentPage == page} key={page}>
-                            <PaginationLink href={`./page/${page}`}>
+                            <PaginationLink onClick={() => setCurrentPage(page)}>
                                 {page}
                             </PaginationLink>
                         </PaginationItem>
                     })   
                 }
                 <PaginationItem disabled={currentPage == nextPage}>
-                    <PaginationLink next href={`./page/${nextPage}`} />
+                    <PaginationLink next onClick={() => setCurrentPage(nextPage)} />
                 </PaginationItem>
             </Pagination>
         </>;
