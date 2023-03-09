@@ -34,7 +34,9 @@ export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick, pr
 
                     <div className={Styles.CommentMessage} dangerouslySetInnerHTML={{__html: comment.Text}}/>
 
-                    
+                    {
+                        comment.Files ? <Files files={comment.Files}/> : <></>
+                    }
                     
                     {
                         !preview ? <>
@@ -51,10 +53,6 @@ export let Comment = ({comment, homePageView = false, onReplyOpenButtonClick, pr
                         </Link>
                     </div>
                 </>
-            }
-
-            {
-                comment.Files ? <Files files={comment.Files}/> : <></>
             }
 
             {
