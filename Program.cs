@@ -18,6 +18,9 @@ builder.Services.AddControllersWithViews()
 var connectionString = builder.Configuration.GetConnectionString("DzenCodeConnectionString");
 builder.Services.AddDbContext<CommentsDbContext>(o => o.UseNpgsql(connectionString));
 LinqToDBForEFTools.Initialize();
+LinqToDB.Data.DataConnection.TurnTraceSwitchOn();
+LinqToDB.Data.DataConnection.WriteTraceLine = (message, displayName, Level) => { Console.WriteLine($"{message} {displayName}"); };
+LinqToDB.Common.Configuration.Linq.GenerateExpressionTest = true;
 
 builder.Services.AddHttpClient<ReCaptcha>(x =>
 {
@@ -46,7 +49,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+        context.Context.Response.Headers.Add("Cache-Control", "no-cache")
+});
 app.UseRouting();
 
 app.MapControllerRoute(
