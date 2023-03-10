@@ -48,3 +48,7 @@ Password = user
 ## Схема БД
 
 ![alt text](https://github.com/arthurlomakin11/TestAppDzenCode/raw/master/schema.png)
+
+## Дамп БД
+
+[Дамп-файл БД](https://github.com/arthurlomakin11/TestAppDzenCode/blob/master/dump.sql)
