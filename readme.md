@@ -32,7 +32,7 @@ sudo docker compose up -d
 
 Приложение будет доступно с портом 4000
 
-Можно подключится к PostgreSQL: порт 5432
+Можно подключится к PostgreSQL: порт 8000
 
 Database = TestAppDzenCodeDB
 
@@ -43,7 +43,7 @@ Password = user
 ## Инстанс на AWS
 [Инстанс](http://ec2-16-171-0-168.eu-north-1.compute.amazonaws.com:4000/) развернут на Ubuntu.
 
-Также, можно подключится к БД по ec2-16-171-0-168.eu-north-1.compute.amazonaws.com:5432
+Также, можно подключится к БД по ec2-16-171-0-168.eu-north-1.compute.amazonaws.com:8000
 
 ## Схема БД
 
