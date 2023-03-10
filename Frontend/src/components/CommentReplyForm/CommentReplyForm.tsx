@@ -64,7 +64,7 @@ export let CommentReplyForm = ({id, addReplyEvent, onReplyOpenButtonClick}:{id:n
             Files: fileList
         });
         reRef?.current?.reset();
-        console.log(response.data)
+
         if(response.status == 200) {
             addReplyEvent ? addReplyEvent(response.data) : (() => {})();
             onReplyOpenButtonClick(0);
