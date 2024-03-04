@@ -1,0 +1,189 @@
+
+//Что будет выведено на экран?
+
+static bool Method1() 
+{ 
+    Console.WriteLine("in Method1");
+    return false; 
+} 
+static bool Method2() 
+{ 
+    Console.WriteLine("in Method2");
+    return true; 
+} 
+static void Main(string[] args) 
+{ 
+    if (Method1() & Method2()) 
+    { 
+       Console.WriteLine("inside if"); 
+    } 
+    if (Method1() && Method2())
+    { 
+       Console.WriteLine("2 inside if");
+    } 
+    if (Method1() || Method2())
+    { 
+       Console.WriteLine("inside or");
+    } 
+} 
+// 
+
+
+//Что будет выведено на экран? 
+class MainClass
+{ 
+     static void Main()
+     {
+          int? i = null;
+          Console.WriteLine(i ?? Convert.ToInt32(i.HasValue)); 
+     }
+}
+
+
+//Что будет выведено на экран?
+class Program
+{
+    static void Main(string[] args)
+    {
+        var p = new Program();
+        p.Test();
+        Console.ReadKey();
+    }
+
+    void Test()
+    {
+        int pass1 = 5;
+        object pass2 = "Test";
+        ThreadPool.QueueUserWorkItem((obj) => 
+        {
+            Console.WriteLine(pass1);
+            Console.WriteLine(pass2);    
+        });            
+    }
+}
+
+//Какой результат вернёт метод? 
+private bool BytesComparison()
+{
+    return new byte() == new byte();
+}
+
+
+//Какой результат вернёт метод? 
+private bool YetAnotherComparison()
+{
+    return new byte[0] == new byte[0];
+}
+
+
+//Скомпилируется ли класс? 
+public class MyClass
+{
+    public int Id { set; get; }
+}
+
+
+//Скомпилируется ли метод? Если да, что он вернёт?
+public bool TrueOrFalse()
+{
+    if (null == (object)null != false)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+
+//Скомпилируется ли метод? 
+private void Hello()
+{
+    throw;
+}
+
+
+// А этот метод?
+private void SafeHello()
+{
+    try
+    {
+        throw new Exception();
+    }
+    catch { }
+}
+
+
+//Что будет выведено на экран? 
+private void Do()
+{
+    int i = 0;
+    i += Increment(ref i);
+
+    Console.WriteLine(i);
+}
+
+private int Increment(ref int i)
+{
+    return i++;
+}
+
+Do();
+
+// Скомпилируется ли этот метод? Если да, что будет выведено на экран?
+private void Do()
+{
+    int i = 0;
+
+    Action<int> action = (ref int i) =>
+        {
+      			var x = i++;
+            i = x; 
+        };
+
+    action(ref i);
+
+    Console.WriteLine(i); 
+}
+
+
+//Сработает ли следующий код? Почему? 
+private void DoOne()
+{
+    using (var stream = new MemoryStream())
+    {
+        stream = new MemoryStream();
+    } 
+  	
+}
+void DoTwo(){
+try{
+      var stream = new MemoryStream();
+      stream = new MemoryStream();
+    }
+  	finally{
+      stream.Dispose();
+    }
+}
+
+//Что будет выведено на экран? 
+private void Do()
+{
+    int linqCounter = 0;
+    var source = new List<byte> { 0, 0, 1, 0, 1 };
+
+    var bytes = source.Where(x =>
+    {
+        linqCounter++;
+        return x > 0;
+    });
+
+    if (bytes.First() == bytes.Last())
+    {
+        Console.WriteLine(linqCounter--);
+    }
+    else
+    {
+        Console.WriteLine(linqCounter++); 
+    }
+}
+
